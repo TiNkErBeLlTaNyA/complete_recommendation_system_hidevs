@@ -47,6 +47,45 @@ uvicorn api.app:app --reload
 
 ---
 
+## Database Schema
+
+The system uses a normalized SQLite database with the following tables:
+
+### Users
+- id (Primary Key)
+- name
+- interests
+- created_at
+
+### Content
+- id (Primary Key)
+- title
+- category
+- difficulty
+- popularity
+
+### Skills
+- id (Primary Key)
+- name
+
+### User_Skills
+- user_id (Foreign Key → Users.id)
+- skill_id (Foreign Key → Skills.id)
+- proficiency
+
+### Content_Skills
+- content_id (Foreign Key → Content.id)
+- skill_id (Foreign Key → Skills.id)
+
+### Interactions
+- user_id (Foreign Key → Users.id)
+- content_id (Foreign Key → Content.id)
+- type
+- rating
+- created_at
+
+---
+
 ##  API Endpoints
 
 * **GET /recommend/{user_id}** → Get recommendations
