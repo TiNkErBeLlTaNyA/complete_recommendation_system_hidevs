@@ -72,7 +72,7 @@ Users interact with content through interactions
 
 * **GET /recommend/{user_id}** → Get recommendations
 
-- Example response: existing user
+* Example response: existing user
 
   ```json
 {
@@ -81,21 +81,20 @@ Users interact with content through interactions
     {
       "item": 6,
       "score": 3.45,
-      "reason": "recommended by similar users"
+      "reason": "based on similar users"
     }
   ],
   "note": "existing user"
 }
 
-For a new user:
-
-```json
+* For a new user:
+* 
 {
   "user_id": 999,
   "results": [...],
   "note": "cold start user"
 }
-
+```
 
 * **POST /feedback** → Record feedback
 * **GET /metrics** → System statistics
