@@ -15,16 +15,21 @@ def run_evaluation():
     evaluator = RecommendationEvaluator()
 
     users = user_repo.all()
+
+    if not users:
+        print("No users found. Run seed_data first.")
+        return
+
     results = []
 
     for user in users:
         recs = orchestrator.get_recommendations(user.id)
-        rec_ids = [r["item"] for r in recs]
 
+        # evaluator can handle dicts directly now
         interactions = user_repo.get_interactions(user.id)
         relevant = [i.content_id for i in interactions]
 
-        metrics = evaluator.evaluate(rec_ids, relevant, k=5)
+        metrics = evaluator.evaluate(recs, relevant, k=5)
         results.append(metrics)
 
     avg = {

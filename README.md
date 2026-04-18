@@ -2,20 +2,27 @@
 
 ## Project Overview
 
-A production-ready hybrid recommendation system built using FastAPI, SQLite, and machine learning techniques. The system delivers personalized recommendations using collaborative, content-based, and popularity-based strategies.
+This project implements a hybrid recommendation system using FastAPI and SQLite.
+
+The system combines three basic strategies:
+- Collaborative filtering (based on user interactions)
+- Content-based filtering (based on category)
+- Popularity-based recommendations
+
+It provides a simple API and UI to fetch and visualize recommendations.
 
 ---
 
 ##  Features
 
-* Hybrid ML Recommendation Engine
-* Collaborative + Content-Based + Popularity Filtering
-* Cold Start Handling
-* Explainable Recommendations
-* FastAPI REST API
-* Interactive Dashboard UI
-* Evaluation Metrics (Precision@5, Recall@5, NDCG@5)
-* Request Logging & Caching
+- Hybrid ML Recommendation Engine
+- Cold start handling for new users
+- Explainable recommendations (reason field)
+- REST API built with FastAPI
+- SQLite database
+- Evaluation metrics (Precision@5, Recall@5, NDCG@5)
+- Basic unit tests
+- Simple dashboard UI
 
 ---
 
@@ -49,60 +56,62 @@ uvicorn api.app:app --reload
 
 ## Database Schema
 
-The system uses a normalized SQLite database with the following tables:
+The system uses a SQLite database with three tables:
 
-### Users
-- id (Primary Key)
-- name
-- interests
-- created_at
+users (id, name, interests, created_at)
+content (id, title, category, difficulty, popularity)
+interactions (user_id, content_id, type, rating, created_at)
 
-### Content
-- id (Primary Key)
-- title
-- category
-- difficulty
-- popularity
+Relationships:
 
-### Skills
-- id (Primary Key)
-- name
-
-### User_Skills
-- user_id (Foreign Key → Users.id)
-- skill_id (Foreign Key → Skills.id)
-- proficiency
-
-### Content_Skills
-- content_id (Foreign Key → Content.id)
-- skill_id (Foreign Key → Skills.id)
-
-### Interactions
-- user_id (Foreign Key → Users.id)
-- content_id (Foreign Key → Content.id)
-- type
-- rating
-- created_at
+Users interact with content through interactions
 
 ---
 
 ##  API Endpoints
 
 * **GET /recommend/{user_id}** → Get recommendations
+
+- Example response: For a user
+{
+  "user_id": 1,
+  "results": [
+    {
+      "item": 6,
+      "score": 3.45,
+      "reason": "recommended by similar users"
+    }
+  ],
+  "note": "existing user"
+}
+For a new user:
+{
+  "user_id": 999,
+  "results": [...],
+  "note": "cold start user"
+}
+
 * **POST /feedback** → Record feedback
 * **GET /metrics** → System statistics
-* **GET /health** → Health check
+- total users
+- total interactions
+* **GET /health** → Health check endpoint
 * **GET /ui** → Dashboard UI
 
 ---
 
 ##  Recommendation Logic
 
-Hybrid scoring:
+The system follows a hybrid approach:
 
-```
-0.5 × collaborative + 0.3 × content + 0.2 × popularity
-```
+- Collaborative Filtering
+- Finds items used by similar users
+- Content-Based Filtering
+- Recommends items with similar categories
+- Popularity-Based Filtering
+- Recommends frequently interacted items
+
+These are combined using weighted scoring.
 
 ---
 
@@ -120,6 +129,39 @@ Metrics used:
 * Recall@5
 * NDCG@5
 
+Sample Results
+
+* precision@5: 0.58  
+* recall@5: 0.57  
+* ndcg@5: 0.62  
+
+These results indicate that the system provides reasonably accurate and well-ranked recommendations.
+
+---
+
+## Testing
+
+Run:
+
+```bash
+pytest
+```
+
+Includes:
+* API tests
+* Data tests
+* Recommendation engine tests
+
+---
+
+## UI
+
+The project includes a simple dashboard:
+
+- Displays recommendations
+- Shows scores using a bar chart
+- Displays total users and interactions
+
 ---
 
 ##  Demo Video
@@ -128,18 +170,8 @@ Metrics used:
 
 ---
 
-##  Highlights
-
-✔ Personalized recommendations
-✔ Cold-start handling
-✔ Explainable results
-✔ API + UI integration
-✔ Production-ready architecture
-
----
-
 ## Conclusion
 
-This project builds a complete recommendation system that combines machine learning techniques with a practical API and database setup to deliver personalized results. By using a hybrid approach of collaborative, content-based, and popularity-based methods, the system is able to handle real-world challenges like cold-start users while providing meaningful recommendations with clear explanations. Overall, it demonstrates a solid understanding of both recommendation algorithms and full-stack system design.
+This project demonstrates a working hybrid recommendation system with API integration, basic evaluation, and a simple UI. It focuses on clarity, correctness, and modular design.
 
 ---

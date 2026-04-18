@@ -14,12 +14,10 @@ body {
     color: white;
 }
 
-/* Layout */
 .container {
     display: flex;
 }
 
-/* Sidebar */
 .sidebar {
     width: 220px;
     height: 100vh;
@@ -35,13 +33,11 @@ body {
     color: #94a3b8;
 }
 
-/* Main */
 .main {
     flex: 1;
     padding: 30px;
 }
 
-/* Top bar */
 .topbar {
     display: flex;
     justify-content: space-between;
@@ -63,7 +59,6 @@ button {
     cursor: pointer;
 }
 
-/* Cards */
 .cards {
     display: flex;
     gap: 15px;
@@ -77,7 +72,6 @@ button {
     border-radius: 12px;
 }
 
-/* Recommendations */
 .grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -90,7 +84,6 @@ button {
     border-radius: 10px;
 }
 
-/* Loader */
 .loader {
     margin-top: 20px;
     color: #38bdf8;
@@ -102,16 +95,13 @@ button {
 
 <div class="container">
 
-    <!-- Sidebar -->
     <div class="sidebar">
         <h2>🚀 AI Reco</h2>
         <p>Smart Recommendation System</p>
     </div>
 
-    <!-- Main -->
     <div class="main">
 
-        <!-- Topbar -->
         <div class="topbar">
             <div>
                 <input id="userId" placeholder="Enter User ID">
@@ -119,7 +109,6 @@ button {
             </div>
         </div>
 
-        <!-- Stats -->
         <div class="cards">
             <div class="card">
                 <h3>Total Users</h3>
@@ -131,13 +120,10 @@ button {
             </div>
         </div>
 
-        <!-- Chart -->
         <canvas id="chart" height="100"></canvas>
 
-        <!-- Status -->
         <div id="status"></div>
 
-        <!-- Recommendations -->
         <h2>Recommendations</h2>
         <div class="grid" id="results"></div>
 
@@ -147,14 +133,20 @@ button {
 <script>
 let chart;
 
+// Load metrics
 async function loadMetrics() {
-    const res = await fetch("/metrics");
-    const data = await res.json();
+    try {
+        const res = await fetch("/metrics");
+        const data = await res.json();
 
-    document.getElementById("users").innerText = data.total_users;
-    document.getElementById("interactions").innerText = data.total_interactions;
+        document.getElementById("users").innerText = data.total_users;
+        document.getElementById("interactions").innerText = data.total_interactions;
+    } catch {
+        console.log("Metrics failed");
+    }
 }
 
+// Load recommendations
 async function loadData() {
     const userId = document.getElementById("userId").value;
     const results = document.getElementById("results");
@@ -169,12 +161,14 @@ async function loadData() {
 
         const data = await res.json();
 
-        status.innerHTML = "";
+        // Show note (cold start / existing)
+        status.innerHTML = `<p style="color:#38bdf8">${data.note}</p>`;
 
         let labels = [];
         let scores = [];
 
-        data.recommendations.forEach(r => {
+        // ✅ FIXED: use data.results
+        data.results.forEach(r => {
             labels.push("Item " + r.item);
             scores.push(r.score);
 
@@ -194,6 +188,7 @@ async function loadData() {
     }
 }
 
+// Chart
 function drawChart(labels, data) {
     if (chart) chart.destroy();
 

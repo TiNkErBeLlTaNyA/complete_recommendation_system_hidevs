@@ -8,16 +8,16 @@ class SimilarityCalculator:
         """
         Compute cosine similarity between users
         """
-        if len(user_item_matrix) == 0:
+        if user_item_matrix is None or len(user_item_matrix) == 0:
             return np.array([])
 
         return cosine_similarity(user_item_matrix)
 
     def item_similarity(self, item_matrix):
         """
-        Compute similarity between items (optional)
+        Compute similarity between items
         """
-        if len(item_matrix) == 0:
+        if item_matrix is None or len(item_matrix) == 0:
             return np.array([])
 
         return cosine_similarity(item_matrix)

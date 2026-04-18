@@ -1,8 +1,15 @@
 from data.database import SessionLocal, engine, Base
 from data.models import User, Content, Interaction
+import random
 
 Base.metadata.create_all(bind=engine)
 db = SessionLocal()
+
+# Clear old data (important for re-runs)
+db.query(Interaction).delete()
+db.query(User).delete()
+db.query(Content).delete()
+db.commit()
 
 # Diverse interests
 interests_list = ["AI", "ML", "Data Science", "Web Dev"]
@@ -12,7 +19,7 @@ for i in range(1, 11):
     db.add(User(
         id=i,
         name=f"User{i}",
-        interests=interests_list[i % len(interests_list)]
+        interests=random.choice(interests_list)
     ))
 
 # Diverse categories
@@ -23,20 +30,24 @@ for i in range(1, 21):
     db.add(Content(
         id=i,
         title=f"Course{i}",
-        category=categories[i % len(categories)],
-        difficulty=["easy", "medium", "hard"][i % 3],
-        popularity=20 - i  # reverse for variation
+        category=random.choice(categories),
+        difficulty=random.choice(["easy", "medium", "hard"]),
+        popularity=random.randint(1, 20)
     ))
 
-# Interactions (more realistic pattern)
+# Interactions (more realistic)
 for i in range(1, 11):
-    for j in range(1, 6):  # each user interacts with 5 items
+    interacted_items = random.sample(range(1, 21), 5)
+
+    for item in interacted_items:
         db.add(Interaction(
             user_id=i,
-            content_id=((i + j) % 20) + 1,
-            type="view",
-            rating=(j % 5) + 1
+            content_id=item,
+            type=random.choice(["view", "click"]),
+            rating=random.randint(1, 5)
         ))
 
 db.commit()
 db.close()
+
+print(" Database seeded successfully")
