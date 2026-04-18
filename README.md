@@ -87,7 +87,9 @@ Users interact with content through interactions
   "note": "existing user"
 }
 ```
+
 For a new user:
+
 ```bash
 {
   "user_id": 999,
