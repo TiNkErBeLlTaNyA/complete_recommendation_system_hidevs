@@ -73,6 +73,7 @@ Users interact with content through interactions
 * **GET /recommend/{user_id}** → Get recommendations
 
 - Example response: For a user
+
   ```bash
 {
   "user_id": 1,
